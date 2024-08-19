@@ -1,3 +1,15 @@
 <resources>
+
+    <!--Texto para las imagenes:-->
     <string name="app_name">Lab2Codelab</string>
+    <string name="imagenArbol">Tap the lemon tree to select a lemon</string>
+    <string name="imagenLimon">Keep tapping the lemon to squeeze it</string>
+    <string name="imagenLimonada">Tap the lemonade to drink it</string>
+    <string name="imagenVasoVacio">Tap the empty glass to start again</string>
+
+    <!--Texto que aparecera si las imagenes no pueden ser vistas:-->
+    <string name="lemonTree">Lemon Tree</string>
+    <string name="Lemon">Lemon</string>
+    <string name="GlassLemonade">Glass of lemonade</string>
+    <string name="EmptyGlass">Empty Glass</string>
 </resources>
