@@ -110,9 +110,9 @@ fun LemonadeContent(){
         Box(
             modifier = Modifier
                 .size(250.dp) // Tamaño del cuadro
-                .background(color = Color.Cyan) // Fondo celeste
+                .background(color = Color(0xFFE0F7FA)) // Fondo celeste
                 .padding(16.dp) // Espacio interno dentro del cuadro
-                .clip(RoundedCornerShape(16.dp))// Redondeado de las esquinas del cuadro celeste
+                .clip(RoundedCornerShape(12.dp))// Redondeado de las esquinas del cuadro celeste
         ) {
             Image(
                 painter = painterResource(id = imageRes),
@@ -161,8 +161,8 @@ fun LemonTopBar() {
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Yellow,
-            titleContentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = Color(0xFFFFEB3B),
+            titleContentColor = Color.Black
         )
     )
 }
