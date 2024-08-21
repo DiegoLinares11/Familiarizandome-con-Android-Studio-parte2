@@ -1,67 +1,83 @@
 package com.uvg.example.lab2codelab
 
 import android.os.Bundle
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.uvg.example.lab2codelab.ui.theme.Lab2CodelabTheme
-import androidx.compose.material3.Button
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalMapOf
-import kotlin.random.Random
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.uvg.example.lab2codelab.ui.theme.LemonadeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Lab2CodelabTheme {
-                limonadaApp()
-
+            LemonadeTheme {
+                LemonApp()
             }
         }
     }
 }
 
+@Composable
+fun LemonApp() {
+    Scaffold(
+        topBar = { LemonTopBar() },
+        content = { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                LemonadeContent()
+            }
+        }
+    )
+}
 
 @Composable
-fun prepararLimonada(modifier: Modifier = Modifier){
-    var paginaActual by remember { mutableStateOf(1)}
-    var vecesExprimida by remember {
-        mutableStateOf(0)
-    }
-    var maxExprimirLimon by remember { mutableStateOf(0)}
+fun LemonadeContent(){
+    var step by remember { mutableStateOf(1) }
+    var squeezeCount by remember { mutableStateOf(0) }
 
-    val imageResource = when (paginaActual) {
+    // Mueve la generación aleatoria de umbral dentro de `remember`
+    val lemonSqueezeThreshold = remember { (2..4).random() }
+
+    // Configura la imagen y el texto según el estado actual
+    val imageRes = when (step) {
         1 -> R.drawable.lemon_tree
         2 -> R.drawable.lemon_squeeze
         3 -> R.drawable.lemon_drink
@@ -69,81 +85,92 @@ fun prepararLimonada(modifier: Modifier = Modifier){
         else -> R.drawable.lemon_tree
     }
 
-    val textResource = when (paginaActual) {
-        1 -> R.string.imagenArbol
-        2 -> R.string.imagenLimon
-        3 -> R.string.imagenLimonada
-        4 -> R.string.imagenVasoVacio
-        else -> R.string.imagenArbol
+    val contentDescription = when (step) {
+        1 -> stringResource(id = R.string.lemonTree)
+        2 -> stringResource(id = R.string.Lemon)
+        3 -> stringResource(id = R.string.GlassLemonade)
+        4 -> stringResource(id = R.string.EmptyGlass)
+        else -> stringResource(id = R.string.EmptyGlass)
     }
 
-    Column (
-        modifier = modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Image(
-            painter = painterResource(imageResource),
-            contentDescription = stringResource(textResource),
+    val instructionText = when (step) {
+        1 -> stringResource(id = R.string.imagenArbol)
+        2 -> stringResource(id = R.string.imagenLimon)
+        3 -> stringResource(id = R.string.imagenLimonada)
+        4 -> stringResource(id = R.string.imagenVasoVacio)
+        else -> stringResource(id = R.string.imagenVasoVacio)
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Cuadro celeste con la imagen adentro
+        Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(12.dp)) // Forma redondeada alrededor de la imagen
-                .background(Color(0xFFE0F7FA)) // Fondo de la imagen con color suave
-                .padding(16.dp) // Espaciado interno
-                .clickable {
-                    when (paginaActual) {
-                        1 -> {
-                            paginaActual = 2
-                            maxExprimirLimon =
-                                Random.nextInt(2, 5) // Genera un número aleatorio entre 2 y 4
-                            vecesExprimida = 0
-                        }
-
-                        2 -> {
-                            vecesExprimida++
-                            if (vecesExprimida >= maxExprimirLimon) {
-                                paginaActual = 3
+                .size(250.dp) // Tamaño del cuadro
+                .background(color = Color.Cyan) // Fondo celeste
+                .padding(16.dp) // Espacio interno dentro del cuadro
+                .clip(RoundedCornerShape(16.dp))// Redondeado de las esquinas del cuadro celeste
+        ) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .size(200.dp) // Tamaño de la imagen
+                    .clickable {
+                        when (step) {
+                            1 -> {
+                                step = 2 // Avanza al paso 2
+                                squeezeCount = 0 // Resetea el conteo de apretadas
                             }
-                        }
-
-                        3 -> {
-                            paginaActual = 4
-                        }
-
-                        4 -> {
-                            paginaActual = 1
+                            2 -> {
+                                squeezeCount++
+                                if (squeezeCount >= lemonSqueezeThreshold) {
+                                    step = 3 // Avanza al paso 3 cuando se alcanza el umbral
+                                }
+                            }
+                            3 -> step = 4 // Avanza al paso 4
+                            4 -> step = 1 // Reinicia el ciclo
                         }
                     }
-                }
-        )
+                    .align(Alignment.Center) // Centra la imagen dentro del cuadro
+            )
+        }
+
+        // Texto de instrucciones
         Spacer(modifier = Modifier.height(16.dp))
-        Text(stringResource(textResource))
+        Text(text = instructionText)
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun limonadaApp() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ){
-                    Text(text = "Lemonade")
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFFEB3B), // Color amarillo
-                    titleContentColor = Color.Black // Color del texto
+fun LemonTopBar() {
+    TopAppBar(
+        title = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.app_name),
+                    style = MaterialTheme.typography.titleLarge
                 )
-            )
-        }
-    ) { padding ->
-        prepararLimonada(modifier = Modifier.padding(padding))
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Yellow,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LemonadePreview(){
+    LemonadeTheme {
+        LemonApp()
     }
 }
